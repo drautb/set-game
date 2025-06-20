@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://pcv086i3daje"]
+
+[ext_resource type="Shader" uid="uid://bj8lb8udhqqeu" path="res://shaders/curve_shape.gdshader" id="1_1t12r"]
+[ext_resource type="Script" uid="uid://ddso1jw2xvvs0" path="res://scripts/shape.gd" id="1_07m50"]
+[ext_resource type="Texture2D" uid="uid://dedwavrou53n5" path="res://assets/curve_shape.png" id="2_1t12r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_plbdb"]
+resource_local_to_scene = true
+shader = ExtResource("1_1t12r")
+shader_parameter/color = Color(0.777198, 0.107059, 0.0978803, 1)
+shader_parameter/margin = 0.05
+shader_parameter/fill_pattern = 2
+
+[node name="CurveShape" type="MarginContainer"]
+anchors_preset = -1
+anchor_right = 0.068
+anchor_bottom = 0.198
+offset_right = -38.336
+offset_bottom = -88.304
+theme_override_constants/margin_left = -25
+theme_override_constants/margin_right = -25
+script = ExtResource("1_07m50")
+
+[node name="Shape" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_plbdb")
+layout_mode = 2
+texture = ExtResource("2_1t12r")
+metadata/_edit_lock_ = true

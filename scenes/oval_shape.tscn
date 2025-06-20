@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://dghdvguky1id1"]
+
+[ext_resource type="Shader" uid="uid://b8y0wlpi8in0n" path="res://shaders/oval.gdshader" id="1_d3tmn"]
+[ext_resource type="Script" uid="uid://ddso1jw2xvvs0" path="res://scripts/shape.gd" id="1_kass4"]
+[ext_resource type="Texture2D" uid="uid://b1ehhda4ugkde" path="res://icon.svg" id="2_kass4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_plbdb"]
+resource_local_to_scene = true
+shader = ExtResource("1_d3tmn")
+shader_parameter/color = Color(0.396304, 0.618258, 0.44787, 1)
+shader_parameter/radius = 0.25
+shader_parameter/margin = 0.05
+shader_parameter/fill_pattern = 2
+
+[node name="OvalShape" type="MarginContainer"]
+anchors_preset = -1
+anchor_right = 0.069
+anchor_bottom = 0.198
+offset_right = 0.511993
+offset_bottom = -0.304016
+theme_override_constants/margin_left = -25
+theme_override_constants/margin_right = -25
+script = ExtResource("1_kass4")
+
+[node name="Shape" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_plbdb")
+layout_mode = 2
+texture = ExtResource("2_kass4")
+stretch_mode = 5
+metadata/_edit_lock_ = true

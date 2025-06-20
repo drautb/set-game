@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://53bubqdcs7mc"]
+
+[ext_resource type="Script" uid="uid://ddso1jw2xvvs0" path="res://scripts/shape.gd" id="1_4cw1d"]
+[ext_resource type="Shader" uid="uid://btowldjc6bu7m" path="res://shaders/diamond.gdshader" id="1_5ed4t"]
+[ext_resource type="Texture2D" uid="uid://b1ehhda4ugkde" path="res://icon.svg" id="2_4cw1d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_plbdb"]
+resource_local_to_scene = true
+shader = ExtResource("1_5ed4t")
+shader_parameter/color = Color(0.498119, 0.20957, 0.483434, 1)
+shader_parameter/slope = 1.75
+shader_parameter/margin = 0.05
+shader_parameter/fill_pattern = 2
+
+[node name="DiamondShape" type="MarginContainer"]
+anchors_preset = -1
+anchor_right = 0.068
+anchor_bottom = 0.198
+offset_right = -38.336
+offset_bottom = -88.304
+theme_override_constants/margin_left = -25
+theme_override_constants/margin_right = -25
+script = ExtResource("1_4cw1d")
+
+[node name="Shape" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_plbdb")
+layout_mode = 2
+texture = ExtResource("2_4cw1d")
+metadata/_edit_lock_ = true

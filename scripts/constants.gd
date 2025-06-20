@@ -1,0 +1,11 @@
+extends Node
+
+enum SHAPE { OVAL, DIAMOND, CURVE }
+enum FILL { EMPTY, STRIPED, FULL }
+enum COLOR { RED, GREEN, PURPLE }
+
+const COLOR_MAP = {
+  COLOR.RED: Color.CRIMSON,
+  COLOR.GREEN: Color.WEB_GREEN,
+  COLOR.PURPLE: Color.PURPLE
+}
