@@ -46,4 +46,20 @@ theme_override_constants/margin_bottom = 30
 layout_mode = 2
 theme_override_constants/h_separation = 25
 theme_override_constants/v_separation = 25
-columns = 4
+columns = 3
+
+[node name="VBoxContainerHUD" type="VBoxContainer" parent="Game/HBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Game/HBoxContainer/VBoxContainerHUD"]
+layout_mode = 2
+
+[node name="RemainingSetsLabel" type="Label" parent="Game/HBoxContainer/VBoxContainerHUD/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Possible Sets: "
+
+[node name="RemainingSetsValue" type="Label" parent="Game/HBoxContainer/VBoxContainerHUD/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "5"

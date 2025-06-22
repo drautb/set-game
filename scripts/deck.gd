@@ -27,24 +27,4 @@ func take_next() -> Node:
   var card_number = deck[_position]
   _position += 1
 
-  var card = card_scene.instantiate()
-  card.shape_color = _get_color(card_number)
-  card.shape_count = _get_count(card_number)
-  card.shape = _get_shape(card_number)
-  card.fill = _get_fill_pattern(card_number)
-  return card;
-
-func _get_color(card_number: int) -> int:
-  @warning_ignore("integer_division")
-  return int(card_number / 27)
-
-func _get_count(card_number: int) -> int:
-  @warning_ignore("integer_division")
-  return int((card_number % 27) / 9) + 1
-
-func _get_shape(card_number: int) -> int:
-  @warning_ignore("integer_division")
-  return int(((card_number % 27) % 9) / 3)
-
-func _get_fill_pattern(card_number: int) -> int:
-  return int(((card_number % 27) % 9) % 3)
+  return Card.new_card(card_number)

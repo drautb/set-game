@@ -21,27 +21,27 @@ bool point_inside_shape(float x, float y) {
 
 void fragment() {
   COLOR = vec4(0);
-  
+
   // Transform coordinates to have origin at center to be easier to work with
   float x = UV.x - 0.5;
   float y = -(UV.y - 0.5);
-  
+
   // y = mx + b
   float upper_right = (-slope * x + (0.5 - margin)) - y;
   if (upper_right > -EPSILON && upper_right < EPSILON && y > 0.0 && x > 0.0) {
     COLOR = color;
   }
-  
+
   float upper_left = (slope * x + (0.5 - margin)) - y;
   if (upper_left > -EPSILON && upper_left < EPSILON && y > 0.0 && x < 0.0) {
     COLOR = color;
   }
-  
+
   float lower_left = (-slope * x - (0.5 - margin)) - y;
   if (lower_left > -EPSILON && lower_left < EPSILON && y < 0.0 && x < 0.0) {
     COLOR = color;
   }
-  
+
   float lower_right = (slope * x - (0.5 - margin)) - y;
   if (lower_right > -EPSILON && lower_right < EPSILON && y < 0.0 && x > 0.0) {
     COLOR = color;

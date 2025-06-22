@@ -1,18 +1,32 @@
 @tool
+class_name Card
 extends Control
 
-signal card_selected
-signal card_deselected
-
-var selected = false
-
-@onready var animations = $AnimationPlayer
-
-var shape_scenes = [
+const card_scene: PackedScene = preload("res://scenes/card.tscn")
+const shape_scenes = [
   preload("res://scenes/oval_shape.tscn"),
   preload("res://scenes/diamond_shape.tscn"),
   preload("res://scenes/curve_shape.tscn")
 ]
+
+
+signal card_selected
+signal card_deselected
+
+
+@onready var animations = $AnimationPlayer
+
+
+var selected = false
+
+var card_number: int = -1:
+  set(new_card_number):
+    card_number = new_card_number
+    shape_color = _get_color(card_number)
+    shape_count = _get_count(card_number)
+    shape = _get_shape(card_number)
+    fill = _get_fill_pattern(card_number)
+
 
 @export var shape: Constants.SHAPE = Constants.SHAPE.OVAL:
   set(new_shape):
@@ -52,8 +66,32 @@ func _update_shapes() -> void:
     shapes_container.add_child(shape_node);
 
 
+func _update_card_number() -> void:
+  if card_number >= 0:
+    return
+
+  print("UPDATING CARD NUMBER: " + str(self))
+
+  card_number = ((shape_count - 1) * 27) + \
+    (shape_color * 9) + \
+    (fill * 3) + \
+    shape
+
+
 func _ready() -> void:
+  _update_card_number()
   _update_shapes()
+
+
+func _to_string() -> String:
+  var args = [
+    card_number,
+    shape_count,
+    Constants.get_color_name(shape_color),
+    Constants.get_fill_name(fill),
+    Constants.get_shape_name(shape)
+  ]
+  return "[CARD %d: %s %s %s %s]" % args
 
 
 func _on_gui_input(event: InputEvent) -> void:
@@ -72,3 +110,28 @@ func deselect() -> void:
     selected = false
     animations.play_backwards("lift")
     emit_signal("card_deselected", self)
+
+
+static func new_card(new_card_number: int) -> Card:
+  var card = card_scene.instantiate()
+  card.card_number = new_card_number;
+  return card;
+
+
+static func _get_count(new_card_number: int) -> int:
+  @warning_ignore("integer_division")
+  return int(new_card_number / 27) + 1
+
+
+static func _get_color(new_card_number: int) -> Constants.COLOR:
+  @warning_ignore("integer_division")
+  return int((new_card_number % 27) / 9) as Constants.COLOR
+
+
+static func _get_fill_pattern(new_card_number: int) -> Constants.FILL:
+  @warning_ignore("integer_division")
+  return int(((new_card_number % 27) % 9) / 3) as Constants.FILL
+
+
+static func _get_shape(new_card_number: int) -> Constants.SHAPE:
+  return int(((new_card_number % 27) % 9) % 3) as Constants.SHAPE
