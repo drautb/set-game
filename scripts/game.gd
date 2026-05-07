@@ -3,8 +3,7 @@ extends CenterContainer
 var _selected_cards = []
 
 
-@onready var card_grid = $HBoxContainer/MarginContainer/CardGrid
-@onready var set_count_label = $HBoxContainer/VBoxContainerHUD/HBoxContainer/RemainingSetsValue
+@onready var card_grid = $MarginContainer/CardGrid
 
 
 func _ready() -> void:
@@ -22,7 +21,7 @@ func _deal_card() -> void:
 
 func _update_remaining_sets() -> void:
   var set_count = _count_visible_sets()
-  set_count_label.text = str(set_count)
+  print("Remaining Sets: " + str(set_count))
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -30,7 +29,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
     if _is_a_set(_selected_cards):
       for c in _selected_cards:
         card_grid.remove_child(c)
-        c.queue_free()
       _selected_cards.clear()
       _deal_card()
       _deal_card()

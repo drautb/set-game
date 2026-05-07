@@ -1,116 +1,104 @@
-[gd_scene load_steps=5 format=3 uid="uid://bgbf8esjy5pxt"]
+[gd_scene format=3 uid="uid://bgbf8esjy5pxt"]
 
 [ext_resource type="Script" uid="uid://bsuxph4noqhpl" path="res://scripts/card.gd" id="1_d81rb"]
+[ext_resource type="Shader" uid="uid://ed3ejs0p144k" path="res://scenes/halo.gdshader" id="1_ktuci"]
+[ext_resource type="Texture2D" uid="uid://bdlk05tfh30qw" path="res://assets/card.png" id="2_6u4wf"]
+[ext_resource type="Shader" uid="uid://kcaua28q2del" path="res://scenes/2d_perspective.gdshader" id="3_kg30u"]
 
-[sub_resource type="Animation" id="Animation_6u4wf"]
-length = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../DropShadow:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(8, 8)]
-}
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ktuci"]
+shader = ExtResource("1_ktuci")
+shader_parameter/shine_num = 16.0
+shader_parameter/rotation_speed = 3.0
+shader_parameter/light_magnitude = 2.0
+shader_parameter/filter_distence = 1.0
+shader_parameter/filter_magnitude = 1.0
+shader_parameter/filter_minv = 0.75
+shader_parameter/cut_inner_radius = 0.1
+shader_parameter/color = Color(1, 1, 0, 1)
+shader_parameter/NOISE_speed = Vector2(0, 0)
+shader_parameter/NOISE_magnitude = 0.0
 
-[sub_resource type="Animation" id="Animation_d81rb"]
-resource_name = "lift"
-length = 0.1
-step = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(0.5, 0.5),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(-10, -12)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../DropShadow:position")
-tracks/1/interp = 2
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(0.5, 0.5),
-"update": 0,
-"values": [Vector2(8, 8), Vector2(10, 12)]
-}
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6u4wf"]
+load_path = "res://.godot/imported/card.png-c12f80167372a8ea75cae1cb137b9cb2.ctex"
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_6u4wf"]
-_data = {
-&"RESET": SubResource("Animation_6u4wf"),
-&"lift": SubResource("Animation_d81rb")
-}
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sy11y"]
+resource_local_to_scene = true
+shader = ExtResource("3_kg30u")
+shader_parameter/fov = 90.0
+shader_parameter/cull_back = false
+shader_parameter/y_rot = 0.0
+shader_parameter/x_rot = 0.0
+shader_parameter/inset = 0.0
 
-[node name="Card" type="Control"]
-custom_minimum_size = Vector2(280, 180)
+[node name="Card" type="Control" unique_id=28247201]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 280.0
-offset_bottom = 180.0
-script = ExtResource("1_d81rb")
-
-[node name="DropShadow" type="ColorRect" parent="."]
-layout_mode = 2
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 288.0
-offset_bottom = 192.0
-mouse_filter = 1
-color = Color(0, 0, 0, 0.321569)
-
-[node name="CardFace" type="ColorRect" parent="."]
-custom_minimum_size = Vector2(280, 180)
-layout_mode = 1
-anchors_preset = -1
-offset_right = 280.0
-offset_bottom = 180.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="CardFace"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -64.0
-offset_bottom = 64.0
+anchor_bottom = 1.0
+offset_right = -996.0
+offset_bottom = -778.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+script = ExtResource("1_d81rb")
+shape = 1
+shape_count = 3
+fill = 1
 
-[node name="Shapes" type="HBoxContainer" parent="CardFace/MarginContainer"]
+[node name="SelectedHalo" type="ColorRect" parent="." unique_id=114608297]
+material = SubResource("ShaderMaterial_ktuci")
+layout_mode = 0
+offset_left = -78.0
+offset_top = -76.0
+offset_right = 368.0
+offset_bottom = 266.0
+color = Color(1.540184e-06, 0.73019266, 0.46496266, 1)
+
+[node name="DropShadow" type="TextureRect" parent="." unique_id=21865653]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(1, 1, 1, 0.38039216)
+layout_mode = 0
+offset_left = 6.0
+offset_top = 8.0
+offset_right = 290.0
+offset_bottom = 190.0
+texture = SubResource("CompressedTexture2D_6u4wf")
+
+[node name="CardFace" type="TextureRect" parent="." unique_id=578037134]
+material = SubResource("ShaderMaterial_sy11y")
+layout_mode = 0
+offset_right = 284.0
+offset_bottom = 182.0
+texture = ExtResource("2_6u4wf")
+stretch_mode = 2
+
+[node name="MarginContainer" type="VBoxContainer" parent="CardFace" unique_id=897449516]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBuffer" type="Control" parent="CardFace/MarginContainer" unique_id=321729558]
 layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="Shapes" type="HBoxContainer" parent="CardFace/MarginContainer" unique_id=1590325947]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 alignment = 1
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../CardFace")
-libraries = {
-&"": SubResource("AnimationLibrary_6u4wf")
-}
+[node name="BottomBuffer" type="Control" parent="CardFace/MarginContainer" unique_id=270554730]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

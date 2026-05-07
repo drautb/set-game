@@ -14,10 +14,10 @@ signal card_selected
 signal card_deselected
 
 
-@onready var animations = $AnimationPlayer
-
-
 var selected = false
+var tween_rot: Tween
+var tween_hover: Tween
+
 
 var card_number: int = -1:
   set(new_card_number):
@@ -48,6 +48,7 @@ var card_number: int = -1:
     fill = new_fill
     _update_shapes()
 
+@onready var card_face: TextureRect = $CardFace
 @onready var shapes_container = $CardFace/MarginContainer/Shapes
 
 
@@ -81,6 +82,7 @@ func _update_card_number() -> void:
 func _ready() -> void:
   _update_card_number()
   _update_shapes()
+  $SelectedHalo.visible = false
 
 
 func _to_string() -> String:
@@ -98,17 +100,53 @@ func _on_gui_input(event: InputEvent) -> void:
   if event.is_action_released("ui_select"):
     selected = !selected
     if selected:
-      animations.play("lift")
+      $SelectedHalo.visible = true
       emit_signal("card_selected", self)
     else:
-      animations.play_backwards("lift")
+      $SelectedHalo.visible = false
       emit_signal("card_deselected", self)
+
+  var mouse_pos: Vector2 = get_local_mouse_position()
+
+  var lerp_val_x: float = remap(mouse_pos.x, 0.0, size.x, 0, 1)
+  var lerp_val_y: float = remap(mouse_pos.y, 0.0, size.y, 0, 1)
+
+  var angle_x_max = 0.2
+  var angle_y_max = 0.2
+
+  var rot_x: float = rad_to_deg(lerp_angle(-angle_x_max, angle_x_max, lerp_val_x))
+  var rot_y: float = rad_to_deg(lerp_angle(angle_y_max, -angle_y_max, lerp_val_y))
+
+  card_face.material.set_shader_parameter("x_rot", rot_y)
+  card_face.material.set_shader_parameter("y_rot", rot_x)
+
+
+func _on_mouse_entered() -> void:
+  if tween_hover and tween_hover.is_running():
+    tween_hover.kill()
+  tween_hover = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+  tween_hover.tween_property(self, "scale", Vector2(1.08, 1.08), 0.5)
+
+
+func _on_mouse_exited() -> void:
+  # Reset rotation
+  if tween_rot and tween_rot.is_running():
+    tween_rot.kill()
+  tween_rot = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK).set_parallel(true)
+  tween_rot.tween_property(card_face.material, "shader_parameter/x_rot", 0.0, 0.5)
+  tween_rot.tween_property(card_face.material, "shader_parameter/y_rot", 0.0, 0.5)
+
+  # Reset scale
+  if tween_hover and tween_hover.is_running():
+    tween_hover.kill()
+  tween_hover = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
+  tween_hover.tween_property(self, "scale", Vector2.ONE, 0.55)
 
 
 func deselect() -> void:
   if selected:
     selected = false
-    animations.play_backwards("lift")
+    $SelectedHalo.visible = false
     emit_signal("card_deselected", self)
 
 

@@ -1,5 +1,5 @@
 @tool
-extends MarginContainer
+extends AspectRatioContainer
 
 @export var color: Color:
   set(new_color):

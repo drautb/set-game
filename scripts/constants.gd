@@ -1,3 +1,4 @@
+@tool
 extends Node
 
 enum SHAPE { OVAL, DIAMOND, CURVE }
