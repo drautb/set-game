@@ -48,8 +48,8 @@ var card_number: int = -1:
     fill = new_fill
     _update_shapes()
 
-@onready var card_face: TextureRect = $CardFace
-@onready var shapes_container = $CardFace/MarginContainer/Shapes
+@onready var card_face: SubViewportContainer = $CardFaceSubViewportContainer
+@onready var shapes_container = $CardFaceSubViewportContainer/SubViewport/CardFace/MarginContainer/Shapes
 
 
 func _update_shapes() -> void:
@@ -82,7 +82,6 @@ func _update_card_number() -> void:
 func _ready() -> void:
   _update_card_number()
   _update_shapes()
-  $SelectedHalo.visible = false
 
 
 func _to_string() -> String:
@@ -100,11 +99,11 @@ func _on_gui_input(event: InputEvent) -> void:
   if event.is_action_released("ui_select"):
     selected = !selected
     if selected:
-      $SelectedHalo.visible = true
       emit_signal("card_selected", self)
     else:
-      $SelectedHalo.visible = false
       emit_signal("card_deselected", self)
+
+    print("SELECTED: " + str(selected))
 
   var mouse_pos: Vector2 = get_local_mouse_position()
 
@@ -125,7 +124,7 @@ func _on_mouse_entered() -> void:
   if tween_hover and tween_hover.is_running():
     tween_hover.kill()
   tween_hover = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
-  tween_hover.tween_property(self, "scale", Vector2(1.08, 1.08), 0.5)
+  tween_hover.tween_property(self, "scale", Vector2(1.15, 1.15), 0.5)
 
 
 func _on_mouse_exited() -> void:
@@ -146,7 +145,6 @@ func _on_mouse_exited() -> void:
 func deselect() -> void:
   if selected:
     selected = false
-    $SelectedHalo.visible = false
     emit_signal("card_deselected", self)
 
 
