@@ -16,7 +16,7 @@ shader_parameter/y_rot = 0.0
 shader_parameter/x_rot = 0.0
 shader_parameter/inset = 0.0
 
-[node name="CardExperimental" type="Control" unique_id=28247201]
+[node name="Card" type="Control" unique_id=28247201]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

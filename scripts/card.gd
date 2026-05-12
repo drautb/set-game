@@ -10,11 +10,9 @@ const shape_scenes = [
 ]
 
 
-signal card_selected
-signal card_deselected
+signal card_clicked
 
 
-var selected = false
 var tween_rot: Tween
 var tween_hover: Tween
 
@@ -97,13 +95,7 @@ func _to_string() -> String:
 
 func _on_gui_input(event: InputEvent) -> void:
   if event.is_action_released("ui_select"):
-    selected = !selected
-    if selected:
-      emit_signal("card_selected", self)
-    else:
-      emit_signal("card_deselected", self)
-
-    print("SELECTED: " + str(selected))
+    emit_signal("card_clicked", self)
 
   var mouse_pos: Vector2 = get_local_mouse_position()
 
@@ -140,12 +132,6 @@ func _on_mouse_exited() -> void:
     tween_hover.kill()
   tween_hover = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_ELASTIC)
   tween_hover.tween_property(self, "scale", Vector2.ONE, 0.55)
-
-
-func deselect() -> void:
-  if selected:
-    selected = false
-    emit_signal("card_deselected", self)
 
 
 static func new_card(new_card_number: int) -> Card:

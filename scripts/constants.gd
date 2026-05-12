@@ -45,3 +45,8 @@ func get_fill_name(fill: FILL) -> String:
       return "Full"
     _:
       return "Unknown"
+
+
+func grid_idx_to_position(grid_idx: int) -> Vector2:
+  assert(grid_idx >= 0 and grid_idx < 12)
+  return Vector2(grid_idx % 4 * 313, int(grid_idx / 4.0) * 224)

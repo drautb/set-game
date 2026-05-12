@@ -1,51 +1,97 @@
-extends CenterContainer
+extends VBoxContainer
 
 var _selected_cards = []
+var _card_positions = {}
 
 
 @onready var card_grid = $MarginContainer/CardGrid
+@onready var selected_card_positions = $SelectedCardPositions
 
 
 func _ready() -> void:
   for i in range(12):
-    _deal_card()
+    var new_card = _deal_card()
+    #new_card.position = Constants.grid_idx_to_position(i)
+    card_grid.add_child(new_card)
+
+  _reset_selected_cards()
   _update_remaining_sets()
-
-
-func _deal_card() -> void:
-  var card = Deck.take_next()
-  card.card_selected.connect(_on_card_selected)
-  card.card_deselected.connect(_on_card_deselected)
-  card_grid.add_child(card)
-
-
-func _update_remaining_sets() -> void:
-  var set_count = _count_visible_sets()
-  print("Remaining Sets: " + str(set_count))
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
   if event.is_action_released("ui_accept"):
     if _is_a_set(_selected_cards):
-      for c in _selected_cards:
-        card_grid.remove_child(c)
-      _selected_cards.clear()
-      _deal_card()
-      _deal_card()
-      _deal_card()
-      _update_remaining_sets()
+      _replace_set()
 
 
-func _on_card_selected(card: Node) -> void:
-  if _selected_cards.size() < 3:
-    _selected_cards.push_back(card)
-  else:
-    card.deselect()
+func _replace_set() -> void:
+  for i in _selected_cards.size():
+    var c = _selected_cards[i]
+    _replace_card(i, c)
+
+  _reset_selected_cards()
+  _update_remaining_sets()
 
 
-func _on_card_deselected(card: Node) -> void:
-  _selected_cards.erase(card)
+func _replace_card(card_idx: int, card: Card) -> void:
+    var c_grid_idx = card_grid.get_children().find(card)
+    var new_card = _deal_card()
+    card_grid.add_child(new_card)
+    card_grid.move_child(new_card, c_grid_idx)
+    card_grid.remove_child(card)
 
+    await get_tree().process_frame
+
+    var target_position = Constants.grid_idx_to_position(c_grid_idx)
+    new_card.position = Vector2(-500, -500)
+
+    var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+    var delay = lerpf(0.0, 0.3, card_idx / 2.0)
+    tween.tween_property(new_card, "position", target_position, 0.5) \
+      .set_delay(delay)
+
+
+func _on_card_clicked(card: Card) -> void:
+  if _selected_cards.has(card):
+    _deselect_card(card)
+  elif _selected_cards.count(0) > 0:
+    _select_card(card)
+
+
+func _reset_selected_cards() -> void:
+  _selected_cards = [0, 0, 0]
+
+
+func _deal_card() -> Card:
+  var card = Deck.take_next()
+  card.connect("card_clicked", _on_card_clicked)
+  return card
+
+
+func _select_card(card: Card) -> void:
+  _card_positions[card.name] = card.position
+  var idx = _selected_cards.find(0)
+  var target_pos = selected_card_positions.get_child(idx).position
+  _selected_cards[idx] = card
+
+  var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+  tween.tween_property(card, "position", target_pos, 0.5)
+
+
+func _deselect_card(card: Card) -> void:
+  var idx = _selected_cards.find(card)
+  _selected_cards[idx] = 0
+
+  var target_pos = _card_positions[card.name]
+  _card_positions.erase(card.name)
+
+  var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+  tween.tween_property(card, "position", target_pos, 0.5)
+
+
+###########################################################
+## SET LOGIC
+###########################################################
 
 func _count_visible_sets() -> int:
   var sets = {}
@@ -64,6 +110,11 @@ func _count_visible_sets() -> int:
   for s in sets:
     print("  SET: " + str(s))
   return sets.size()
+
+
+func _update_remaining_sets() -> void:
+  var set_count = _count_visible_sets()
+  print("Remaining Sets: " + str(set_count))
 
 
 func _is_a_set(cards: Array) -> bool:

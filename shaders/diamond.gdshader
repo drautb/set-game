@@ -4,7 +4,7 @@ const float EPSILON = 0.03;
 
 uniform vec4 color: source_color;
 uniform float slope = 1.75;
-uniform float margin = 0.05;
+uniform float margin = 0.1;
 uniform int fill_pattern: hint_range(0, 2);
 
 
