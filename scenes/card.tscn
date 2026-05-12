@@ -58,6 +58,7 @@ render_target_update_mode = 4
 [node name="CardFace" type="TextureRect" parent="CardFaceSubViewportContainer/SubViewport" unique_id=578037134]
 offset_right = 284.0
 offset_bottom = 182.0
+mouse_filter = 2
 texture = ExtResource("4_41xd8")
 stretch_mode = 2
 
@@ -68,6 +69,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="TopBuffer" type="Control" parent="CardFaceSubViewportContainer/SubViewport/CardFace/MarginContainer" unique_id=321729558]
 layout_mode = 2
@@ -78,6 +80,7 @@ mouse_filter = 1
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
+mouse_filter = 2
 alignment = 1
 
 [node name="BottomBuffer" type="Control" parent="CardFaceSubViewportContainer/SubViewport/CardFace/MarginContainer" unique_id=270554730]

@@ -4,7 +4,9 @@ var _selected_cards = []
 var _card_positions = {}
 
 
-@onready var card_grid = $MarginContainer/CardGrid
+@onready var card_grid = $HBoxContainer/CardGridMarginContainer/CardGrid
+@onready var draw_pile = $HBoxContainer/Decks/Draw
+@onready var discard_pile = $HBoxContainer/Decks/Discard
 @onready var selected_card_positions = $SelectedCardPositions
 
 
@@ -34,21 +36,29 @@ func _replace_set() -> void:
 
 
 func _replace_card(card_idx: int, card: Card) -> void:
-    var c_grid_idx = card_grid.get_children().find(card)
-    var new_card = _deal_card()
-    card_grid.add_child(new_card)
-    card_grid.move_child(new_card, c_grid_idx)
-    card_grid.remove_child(card)
+  var c_grid_idx = card_grid.get_children().find(card)
+  var new_card = _deal_card()
+  card_grid.add_child(new_card)
+  card_grid.move_child(new_card, c_grid_idx)
+  card_grid.remove_child(card)
+  self.add_child(card)
 
-    await get_tree().process_frame
+  # Wait a frame for the grid container to position the new cards
+  await get_tree().process_frame
 
-    var target_position = Constants.grid_idx_to_position(c_grid_idx)
-    new_card.position = Vector2(-500, -500)
+  card.position = Constants.grid_idx_to_position(c_grid_idx)
+  var clear_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+  clear_tween.tween_property(card, "position", discard_pile.global_position, 0.3)
+  clear_tween.tween_callback(card.queue_free)
 
-    var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-    var delay = lerpf(0.0, 0.3, card_idx / 2.0)
-    tween.tween_property(new_card, "position", target_position, 0.5) \
-      .set_delay(delay)
+  var target_position = Constants.grid_idx_to_position(c_grid_idx)
+  # TODO: Update this to come from a deck sprite
+  new_card.global_position = draw_pile.global_position
+
+  var deal_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+  var delay = lerpf(0.3, 0.6, card_idx / 2.0)
+  deal_tween.tween_property(new_card, "position", target_position, 0.5) \
+    .set_delay(delay)
 
 
 func _on_card_clicked(card: Card) -> void:

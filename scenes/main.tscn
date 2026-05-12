@@ -2,6 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://pprhmmjadbbb" path="res://shaders/balatro.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cp1xl4cmuywag" path="res://scripts/game.gd" id="2_sugp2"]
+[ext_resource type="Texture2D" uid="uid://bdlk05tfh30qw" path="res://assets/card.png" id="3_sugp2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -23,6 +24,7 @@ material = SubResource("ShaderMaterial_0wfyh")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 344.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -31,13 +33,16 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -640.0
-offset_right = 640.0
+offset_left = -956.0
+offset_right = 612.0
 offset_bottom = 960.0
 grow_horizontal = 2
 script = ExtResource("2_sugp2")
 
-[node name="MarginContainer" type="MarginContainer" parent="GameArea" unique_id=1125922493]
+[node name="HBoxContainer" type="HBoxContainer" parent="GameArea" unique_id=1698330540]
+layout_mode = 2
+
+[node name="CardGridMarginContainer" type="MarginContainer" parent="GameArea/HBoxContainer" unique_id=1125922493]
 custom_minimum_size = Vector2(1280, 700)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -46,11 +51,22 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 30
 theme_override_constants/margin_bottom = 30
 
-[node name="CardGrid" type="GridContainer" parent="GameArea/MarginContainer" unique_id=1483170445]
+[node name="CardGrid" type="GridContainer" parent="GameArea/HBoxContainer/CardGridMarginContainer" unique_id=1483170445]
 layout_mode = 2
 theme_override_constants/h_separation = 30
 theme_override_constants/v_separation = 30
 columns = 4
+
+[node name="Decks" type="VBoxContainer" parent="GameArea/HBoxContainer" unique_id=1914290042]
+layout_mode = 2
+
+[node name="Draw" type="TextureRect" parent="GameArea/HBoxContainer/Decks" unique_id=352076080]
+layout_mode = 2
+texture = ExtResource("3_sugp2")
+
+[node name="Discard" type="TextureRect" parent="GameArea/HBoxContainer/Decks" unique_id=1613140970]
+layout_mode = 2
+texture = ExtResource("3_sugp2")
 
 [node name="SelectedCardPositions" type="Node2D" parent="GameArea" unique_id=2064652312]
 
