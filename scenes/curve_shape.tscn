@@ -25,6 +25,6 @@ fill_pattern = 1
 [node name="Shape" type="TextureRect" parent="." unique_id=617976026]
 material = SubResource("ShaderMaterial_plbdb")
 layout_mode = 2
-mouse_filter = 2
+mouse_filter = 0
 texture = ExtResource("2_1t12r")
 expand_mode = 1

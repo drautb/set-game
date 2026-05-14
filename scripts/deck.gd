@@ -22,9 +22,14 @@ func shuffle() -> void:
   _position = 0
 
 
-func take_next() -> Node:
+func take_next() -> Card:
   assert(_position < deck.size(), "Deck position out of bounds!")
   var card_number = deck[_position]
   _position += 1
 
   return Card.new_card(card_number)
+
+
+func put_on_bottom(card_number) -> void:
+  #assert(card_number not in deck)
+  deck.push_back(card_number)

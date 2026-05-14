@@ -11,19 +11,16 @@ var _card_positions = {}
 
 
 func _ready() -> void:
-  for i in range(12):
-    var new_card = _deal_card()
-    #new_card.position = Constants.grid_idx_to_position(i)
-    card_grid.add_child(new_card)
-
-  _reset_selected_cards()
-  _update_remaining_sets()
+  _deal_new_cards()
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
   if event.is_action_released("ui_accept"):
     if _is_a_set(_selected_cards):
       _replace_set()
+
+  if event.is_action_released("set_refresh_cards"):
+    _deal_new_cards()
 
 
 func _replace_set() -> void:
@@ -47,18 +44,22 @@ func _replace_card(card_idx: int, card: Card) -> void:
   await get_tree().process_frame
 
   card.position = Constants.grid_idx_to_position(c_grid_idx)
-  var clear_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-  clear_tween.tween_property(card, "position", discard_pile.global_position, 0.3)
-  clear_tween.tween_callback(card.queue_free)
+  _animate_discard(card, discard_pile.global_position)
 
   var target_position = Constants.grid_idx_to_position(c_grid_idx)
-  # TODO: Update this to come from a deck sprite
   new_card.global_position = draw_pile.global_position
 
   var deal_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
   var delay = lerpf(0.3, 0.6, card_idx / 2.0)
   deal_tween.tween_property(new_card, "position", target_position, 0.5) \
     .set_delay(delay)
+
+
+func _animate_discard(card: Card, pile_position: Vector2, delay: float = 0.0) -> Tween:
+  var clear_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+  clear_tween.tween_property(card, "position", pile_position, 0.5).set_delay(delay)
+  clear_tween.tween_callback(card.queue_free)
+  return clear_tween
 
 
 func _on_card_clicked(card: Card) -> void:
@@ -125,6 +126,29 @@ func _count_visible_sets() -> int:
 func _update_remaining_sets() -> void:
   var set_count = _count_visible_sets()
   print("Remaining Sets: " + str(set_count))
+  if set_count == 0:
+    _deal_new_cards()
+
+
+func _deal_new_cards() -> void:
+  var delay = 0.0
+  var tween = null
+  var current_cards = card_grid.get_children()
+  current_cards.reverse()
+  for c: Card in current_cards:
+    Deck.put_on_bottom(c.card_number)
+    tween = _animate_discard(c, draw_pile.global_position, delay)
+    #delay +=
+
+  if tween:
+    await tween.finished
+
+  for i in range(12):
+    var new_card = _deal_card()
+    card_grid.add_child(new_card)
+
+  _reset_selected_cards()
+  _update_remaining_sets()
 
 
 func _is_a_set(cards: Array) -> bool:
