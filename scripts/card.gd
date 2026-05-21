@@ -1,6 +1,6 @@
 @tool
 class_name Card
-extends Control
+extends Container
 
 const card_scene: PackedScene = preload("res://scenes/card.tscn")
 const shape_scenes = [

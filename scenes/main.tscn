@@ -2,7 +2,6 @@
 
 [ext_resource type="Shader" uid="uid://pprhmmjadbbb" path="res://shaders/balatro.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cp1xl4cmuywag" path="res://scripts/game.gd" id="2_sugp2"]
-[ext_resource type="Texture2D" uid="uid://bdlk05tfh30qw" path="res://assets/card.png" id="3_sugp2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -24,57 +23,68 @@ material = SubResource("ShaderMaterial_0wfyh")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 344.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="GameArea" type="VBoxContainer" parent="." unique_id=1005279493]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -956.0
-offset_right = 612.0
-offset_bottom = 960.0
-grow_horizontal = 2
 script = ExtResource("2_sugp2")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GameArea" unique_id=1698330540]
-layout_mode = 2
+[node name="CardArea" type="Node2D" parent="." unique_id=1809555223]
+position = Vector2(32, 32)
 
-[node name="CardGridMarginContainer" type="MarginContainer" parent="GameArea/HBoxContainer" unique_id=1125922493]
-custom_minimum_size = Vector2(1280, 700)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
+[node name="Cards" type="Node2D" parent="CardArea" unique_id=1598450988]
 
-[node name="CardGrid" type="GridContainer" parent="GameArea/HBoxContainer/CardGridMarginContainer" unique_id=1483170445]
-layout_mode = 2
-theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 30
-columns = 4
+[node name="CardPositions" type="Node2D" parent="CardArea" unique_id=905713184]
 
-[node name="Decks" type="VBoxContainer" parent="GameArea/HBoxContainer" unique_id=1914290042]
-layout_mode = 2
+[node name="Card1" type="Marker2D" parent="CardArea/CardPositions" unique_id=1692239637]
 
-[node name="Draw" type="TextureRect" parent="GameArea/HBoxContainer/Decks" unique_id=352076080]
-layout_mode = 2
-texture = ExtResource("3_sugp2")
+[node name="Card2" type="Marker2D" parent="CardArea/CardPositions" unique_id=936897093]
+position = Vector2(320, 0)
 
-[node name="Discard" type="TextureRect" parent="GameArea/HBoxContainer/Decks" unique_id=1613140970]
-layout_mode = 2
-texture = ExtResource("3_sugp2")
+[node name="Card3" type="Marker2D" parent="CardArea/CardPositions" unique_id=848010868]
+position = Vector2(640, 0)
 
-[node name="SelectedCardPositions" type="Node2D" parent="GameArea" unique_id=2064652312]
+[node name="Card4" type="Marker2D" parent="CardArea/CardPositions" unique_id=1579304368]
+position = Vector2(960, 0)
 
-[node name="Card1" type="Marker2D" parent="GameArea/SelectedCardPositions" unique_id=839589708]
-position = Vector2(64, 700)
+[node name="Card5" type="Marker2D" parent="CardArea/CardPositions" unique_id=1774723494]
+position = Vector2(0, 220)
 
-[node name="Card2" type="Marker2D" parent="GameArea/SelectedCardPositions" unique_id=1111075272]
-position = Vector2(448, 700)
+[node name="Card6" type="Marker2D" parent="CardArea/CardPositions" unique_id=2103852640]
+position = Vector2(320, 220)
 
-[node name="Card3" type="Marker2D" parent="GameArea/SelectedCardPositions" unique_id=1260614820]
-position = Vector2(832, 700)
+[node name="Card7" type="Marker2D" parent="CardArea/CardPositions" unique_id=1236835]
+position = Vector2(640, 220)
+
+[node name="Card8" type="Marker2D" parent="CardArea/CardPositions" unique_id=1369228529]
+position = Vector2(960, 220)
+
+[node name="Card9" type="Marker2D" parent="CardArea/CardPositions" unique_id=745094735]
+position = Vector2(0, 440)
+
+[node name="Card10" type="Marker2D" parent="CardArea/CardPositions" unique_id=2104978779]
+position = Vector2(320, 440)
+
+[node name="Card11" type="Marker2D" parent="CardArea/CardPositions" unique_id=1599145641]
+position = Vector2(640, 440)
+
+[node name="Card12" type="Marker2D" parent="CardArea/CardPositions" unique_id=1995626779]
+position = Vector2(960, 440)
+
+[node name="SelectedCardPositions" type="Node2D" parent="." unique_id=2064652312]
+
+[node name="Card1" type="Marker2D" parent="SelectedCardPositions" unique_id=839589708]
+position = Vector2(64, 672)
+
+[node name="Card2" type="Marker2D" parent="SelectedCardPositions" unique_id=1111075272]
+position = Vector2(448, 672)
+
+[node name="Card3" type="Marker2D" parent="SelectedCardPositions" unique_id=1260614820]
+position = Vector2(832, 672)
+
+[node name="Decks" type="Node2D" parent="." unique_id=727604989]
+position = Vector2(48, 48)
+
+[node name="Draw" type="Marker2D" parent="Decks" unique_id=1419498367]
+position = Vector2(1296, 48)
+
+[node name="Discard" type="Marker2D" parent="Decks" unique_id=1612783644]
+position = Vector2(1304, 272)

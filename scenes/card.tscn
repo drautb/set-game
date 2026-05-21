@@ -16,36 +16,49 @@ shader_parameter/y_rot = 0.0
 shader_parameter/x_rot = 0.0
 shader_parameter/inset = 0.0
 
-[node name="Card" type="Control" unique_id=28247201]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -996.0
-offset_bottom = -778.0
+[node name="Card" type="Container" unique_id=998946173]
+custom_minimum_size = Vector2(290, 190)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -145.0
+offset_top = -95.0
+offset_right = 145.0
+offset_bottom = 95.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-mouse_filter = 1
 script = ExtResource("1_kg30u")
+shape = 1
+shape_count = 3
+fill = 2
 
-[node name="DropShadow" type="TextureRect" parent="." unique_id=21865653]
+[node name="ShadowContainer" type="Control" parent="." unique_id=910511540]
+custom_minimum_size = Vector2(290, 190)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="DropShadow" type="TextureRect" parent="ShadowContainer" unique_id=21865653]
 modulate = Color(0, 0, 0, 1)
 self_modulate = Color(1, 1, 1, 0.38039216)
-layout_mode = 0
-offset_left = 6.0
-offset_top = 8.0
-offset_right = 290.0
-offset_bottom = 190.0
+custom_minimum_size = Vector2(284, 182)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = SubResource("CompressedTexture2D_6u4wf")
 
 [node name="CardFaceSubViewportContainer" type="SubViewportContainer" parent="." unique_id=817595048]
 material = SubResource("ShaderMaterial_t2v54")
-layout_mode = 0
-offset_right = 284.0
-offset_bottom = 182.0
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 mouse_filter = 2
 
 [node name="SubViewport" type="SubViewport" parent="CardFaceSubViewportContainer" unique_id=400625232]

@@ -26,9 +26,9 @@ Deck="*res://scripts/deck.gd"
 
 [display]
 
-window/size/viewport_width=1568
+window/size/viewport_width=1560
 window/size/viewport_height=960
-window/stretch/mode="viewport"
+window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [editor_plugins]

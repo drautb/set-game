@@ -1,12 +1,13 @@
-extends VBoxContainer
+extends ColorRect
 
 var _selected_cards = []
 var _card_positions = {}
 
 
-@onready var card_grid = $HBoxContainer/CardGridMarginContainer/CardGrid
-@onready var draw_pile = $HBoxContainer/Decks/Draw
-@onready var discard_pile = $HBoxContainer/Decks/Discard
+@onready var cards = $CardArea/Cards
+@onready var card_positions = $CardArea/CardPositions
+@onready var draw_pile = $Decks/Draw
+@onready var discard_pile = $Decks/Discard
 @onready var selected_card_positions = $SelectedCardPositions
 
 
@@ -18,6 +19,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
   if event.is_action_released("ui_accept"):
     if _is_a_set(_selected_cards):
       _replace_set()
+    else:
+      for c in _selected_cards:
+        _deselect_card(c)
 
   if event.is_action_released("set_refresh_cards"):
     _deal_new_cards()
@@ -33,11 +37,11 @@ func _replace_set() -> void:
 
 
 func _replace_card(card_idx: int, card: Card) -> void:
-  var c_grid_idx = card_grid.get_children().find(card)
+  var c_grid_idx = cards.get_children().find(card)
   var new_card = _deal_card()
-  card_grid.add_child(new_card)
-  card_grid.move_child(new_card, c_grid_idx)
-  card_grid.remove_child(card)
+  cards.add_child(new_card)
+  cards.move_child(new_card, c_grid_idx)
+  cards.remove_child(card)
   self.add_child(card)
 
   # Wait a frame for the grid container to position the new cards
@@ -46,13 +50,18 @@ func _replace_card(card_idx: int, card: Card) -> void:
   card.position = Constants.grid_idx_to_position(c_grid_idx)
   _animate_discard(card, discard_pile.global_position)
 
-  var target_position = Constants.grid_idx_to_position(c_grid_idx)
-  new_card.global_position = draw_pile.global_position
+  new_card.position = draw_pile.position
+  var target_position = card_positions.get_child(c_grid_idx).position
 
-  var deal_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
   var delay = lerpf(0.3, 0.6, card_idx / 2.0)
-  deal_tween.tween_property(new_card, "position", target_position, 0.5) \
+  _animate_deal(new_card, target_position, delay)
+
+
+func _animate_deal(card: Card, target_position: Vector2, delay: float = 0.0) -> Tween:
+  var deal_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+  deal_tween.tween_property(card, "position", target_position, 0.5) \
     .set_delay(delay)
+  return deal_tween
 
 
 func _animate_discard(card: Card, pile_position: Vector2, delay: float = 0.0) -> Tween:
@@ -106,16 +115,16 @@ func _deselect_card(card: Card) -> void:
 
 func _count_visible_sets() -> int:
   var sets = {}
-  for c1 in card_grid.get_children():
-    for c2 in card_grid.get_children():
-      for c3 in card_grid.get_children():
+  for c1: Card in cards.get_children():
+    for c2: Card in cards.get_children():
+      for c3: Card in cards.get_children():
         if c1 == c2 or c2 == c3 or c1 == c3:
           continue
 
-        var cards = [c1, c2, c3]
+        var current_cards = [c1, c2, c3]
         if _is_a_set([c1, c2, c3]):
-          cards.sort_custom(func(a, b): return a.card_number < b.card_number)
-          sets[cards] = true
+          current_cards.sort_custom(func(a, b): return a.card_number < b.card_number)
+          sets[current_cards] = true
 
   print("REMAINING SETS")
   for s in sets:
@@ -133,33 +142,43 @@ func _update_remaining_sets() -> void:
 func _deal_new_cards() -> void:
   var delay = 0.0
   var tween = null
-  var current_cards = card_grid.get_children()
+  var current_cards = cards.get_children()
   current_cards.reverse()
   for c: Card in current_cards:
     Deck.put_on_bottom(c.card_number)
     tween = _animate_discard(c, draw_pile.global_position, delay)
-    #delay +=
+    delay += 0.05
 
   if tween:
     await tween.finished
 
+  # Wait for discards to all be freed
+  await get_tree().process_frame
+
+  delay = 0.0
   for i in range(12):
     var new_card = _deal_card()
-    card_grid.add_child(new_card)
+    cards.add_child(new_card)
+    new_card.position = draw_pile.position
+    tween = _animate_deal(new_card, card_positions.get_child(i).position, delay)
+    delay += 0.05
+
+  if tween:
+    await tween.finished
 
   _reset_selected_cards()
   _update_remaining_sets()
 
 
-func _is_a_set(cards: Array) -> bool:
-  if cards.size() != 3:
+func _is_a_set(three_cards: Array) -> bool:
+  if three_cards.size() != 3:
     return false
 
   var uniq_shapes = {}
   var uniq_colors = {}
   var uniq_counts = {}
   var uniq_fills = {}
-  for c in cards:
+  for c in three_cards:
     uniq_shapes[c.shape] = true
     uniq_colors[c.shape_color] = true
     uniq_counts[c.shape_count] = true
