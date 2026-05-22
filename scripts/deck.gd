@@ -7,29 +7,29 @@ var card_scene = preload("res://scenes/card.tscn")
 # 3 Patterns
 # 3 Colors
 # = 3^4 = 81 possible cards
+const CARD_COUNT = 81
 
 var deck = []
-var _position = 0
+
 
 func _ready() -> void:
-  for i in range(81):
+  for i in range(CARD_COUNT):
     deck.push_back(i)
   shuffle()
 
 
 func shuffle() -> void:
   deck.shuffle()
-  _position = 0
+
+
+func is_empty() -> bool:
+  return deck.is_empty()
 
 
 func take_next() -> Card:
-  assert(_position < deck.size(), "Deck position out of bounds!")
-  var card_number = deck[_position]
-  _position += 1
-
-  return Card.new_card(card_number)
+  assert(not deck.is_empty())
+  return Card.new_card(deck.pop_back())
 
 
 func put_on_bottom(card_number) -> void:
-  #assert(card_number not in deck)
-  deck.push_back(card_number)
+  deck.push_front(card_number)

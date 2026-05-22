@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://p8n7aa067u53"]
+
+[ext_resource type="Texture2D" uid="uid://bdlk05tfh30qw" path="res://assets/card.png" id="1_iirrk"]
+
+[node name="CardPlaceholder" type="TextureRect" unique_id=158643687]
+self_modulate = Color(0, 0, 0, 0.4627451)
+texture = ExtResource("1_iirrk")
