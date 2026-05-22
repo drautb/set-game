@@ -3,6 +3,9 @@ extends ColorRect
 var _selected_cards = []
 var _card_positions = {}
 
+var _sets_found = 0
+var _score = 0
+
 
 @onready var card_area = $CardArea
 @onready var cards = $CardArea/Cards
@@ -10,6 +13,9 @@ var _card_positions = {}
 @onready var draw_pile = $Decks/Draw
 @onready var discard_pile = $Decks/Discard
 @onready var selected_card_positions = $CardArea/SelectedCardPositions
+
+@onready var set_count_label = $HUD/SetCountValue
+@onready var score_value_label = $HUD/ScoreValue
 
 
 func _ready() -> void:
@@ -20,6 +26,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
   if event.is_action_released("ui_accept"):
     var three_cards = _selected_cards.filter(func(c): return c is Card)
     if _is_a_set(three_cards):
+      _score += _get_score(three_cards)
+      _sets_found += 1
+      _refresh_hud()
       _replace_set()
     else:
       for c: Card in three_cards:
@@ -27,6 +36,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
   if event.is_action_released("set_refresh_cards"):
     _deal_new_cards()
+
+
+func _refresh_hud() -> void:
+  set_count_label.text = str(_sets_found)
+  score_value_label.text = str(_score)
 
 
 func _replace_set() -> void:
@@ -181,6 +195,16 @@ func _is_a_set(three_cards: Array) -> bool:
   if three_cards.size() != 3 or three_cards.has(0):
     return false
 
+  return not _get_uniq_attributes(three_cards).has(2)
+
+
+func _get_score(three_cards: Array) -> int:
+  var uniq_attributes = _get_uniq_attributes(three_cards)
+  assert(not uniq_attributes.has(2))
+  return uniq_attributes.count(3)
+
+
+func _get_uniq_attributes(three_cards: Array) -> Array:
   var uniq_shapes = {}
   var uniq_colors = {}
   var uniq_counts = {}
@@ -191,10 +215,4 @@ func _is_a_set(three_cards: Array) -> bool:
     uniq_counts[c.shape_count] = true
     uniq_fills[c.fill] = true
 
-  if uniq_shapes.size() == 2 || \
-      uniq_colors.size() == 2 || \
-      uniq_counts.size() == 2 || \
-      uniq_fills.size() == 2:
-    return false
-
-  return true
+  return [uniq_shapes.size(), uniq_colors.size(), uniq_counts.size(), uniq_fills.size()]

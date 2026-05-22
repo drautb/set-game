@@ -3,5 +3,5 @@
 [ext_resource type="Texture2D" uid="uid://bdlk05tfh30qw" path="res://assets/card.png" id="1_iirrk"]
 
 [node name="CardPlaceholder" type="TextureRect" unique_id=158643687]
-self_modulate = Color(0, 0, 0, 0.4627451)
+self_modulate = Color(0, 0, 0, 0.3529412)
 texture = ExtResource("1_iirrk")

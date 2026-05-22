@@ -3,6 +3,7 @@
 [ext_resource type="Shader" uid="uid://pprhmmjadbbb" path="res://shaders/balatro.gdshader" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://cp1xl4cmuywag" path="res://scripts/game.gd" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://p8n7aa067u53" path="res://scenes/card_placeholder.tscn" id="3_sugp2"]
+[ext_resource type="Texture2D" uid="uid://bdlk05tfh30qw" path="res://assets/card.png" id="4_jyhfs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0wfyh"]
 shader = ExtResource("1_o5qli")
@@ -95,3 +96,63 @@ position = Vector2(-496, 208)
 
 [node name="Discard" type="Marker2D" parent="Decks" unique_id=1612783644]
 position = Vector2(1360, 208)
+
+[node name="HUD" type="NinePatchRect" parent="." unique_id=1493331309]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 904.0
+offset_right = 1216.0
+offset_bottom = 960.0
+texture = ExtResource("4_jyhfs")
+patch_margin_left = 12
+patch_margin_top = 12
+patch_margin_right = 12
+axis_stretch_vertical = 1
+
+[node name="SetCount" type="Label" parent="HUD" unique_id=263414887]
+layout_mode = 0
+offset_left = 640.0
+offset_right = 758.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.32156864)
+theme_override_font_sizes/font_size = 40
+text = "Found:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SetCountValue" type="Label" parent="HUD" unique_id=720978096]
+layout_mode = 0
+offset_left = 776.0
+offset_right = 840.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.32156864)
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Score" type="Label" parent="HUD" unique_id=1711715639]
+layout_mode = 0
+offset_left = 912.0
+offset_right = 1030.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.32156864)
+theme_override_font_sizes/font_size = 40
+text = "Score:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreValue" type="Label" parent="HUD" unique_id=1276757489]
+layout_mode = 0
+offset_left = 1040.0
+offset_right = 1104.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.32156864)
+theme_override_font_sizes/font_size = 40
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
