@@ -2,6 +2,7 @@ extends ColorRect
 
 var _selected_cards = []
 var _card_positions = {}
+var _remaining_sets = []
 
 var _sets_found = 0
 var _score = 0
@@ -17,6 +18,8 @@ var _score = 0
 @onready var set_count_label = $HUD/SetCountValue
 @onready var score_value_label = $HUD/ScoreValue
 
+@onready var hint_timer = $HintTimer
+
 
 func _ready() -> void:
   _deal_new_cards()
@@ -26,6 +29,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
   if event.is_action_released("ui_accept"):
     var three_cards = _selected_cards.filter(func(c): return c is Card)
     if _is_a_set(three_cards):
+      hint_timer.start()
       _score += _get_score(three_cards)
       _sets_found += 1
       _refresh_hud()
@@ -36,6 +40,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
   if event.is_action_released("set_refresh_cards"):
     _deal_new_cards()
+
+  if event.is_action_released("set_give_hint"):
+    _give_hint()
 
 
 func _refresh_hud() -> void:
@@ -128,11 +135,30 @@ func _deselect_card(card: Card) -> void:
   tween.tween_property(card, "position", target_pos, 0.5)
 
 
+func _give_hint() -> void:
+  # Pick a random card from one of the visible sets, and wiggle it
+  var selected_set = _remaining_sets[randi_range(0, _remaining_sets.size() - 1)]
+  var selected_card = selected_set[randi_range(0, 2)]
+
+  _animate_wiggle(selected_card)
+
+
+func _animate_wiggle(card: Card) -> void:
+  var rotate_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
+  rotate_tween.tween_property(card, "rotation", 0.03*PI, 0.05)
+  rotate_tween.tween_property(card, "rotation", -0.03*PI, 0.1)
+  rotate_tween.tween_property(card, "rotation", 0, 0.05)
+
+
+func _on_hint_timer_timeout() -> void:
+  _give_hint()
+
+
 ###########################################################
 ## SET LOGIC
 ###########################################################
 
-func _count_visible_sets() -> int:
+func _collect_visible_sets() -> int:
   var sets = {}
   for c1: Card in cards.get_children():
     for c2: Card in cards.get_children():
@@ -146,13 +172,15 @@ func _count_visible_sets() -> int:
           sets[current_cards] = true
 
   print("REMAINING SETS")
+  _remaining_sets.clear()
   for s in sets:
+    _remaining_sets.push_back(s)
     print("  SET: " + str(s))
-  return sets.size()
+  return _remaining_sets.size()
 
 
 func _update_remaining_sets() -> void:
-  var set_count = _count_visible_sets()
+  var set_count = _collect_visible_sets()
   print("Remaining Sets: " + str(set_count))
   if set_count == 0 and not Deck.is_empty():
     _deal_new_cards()

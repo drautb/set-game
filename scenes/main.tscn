@@ -156,3 +156,9 @@ theme_override_font_sizes/font_size = 40
 text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="HintTimer" type="Timer" parent="." unique_id=857309837]
+wait_time = 60.0
+autostart = true
+
+[connection signal="timeout" from="HintTimer" to="." method="_on_hint_timer_timeout"]
