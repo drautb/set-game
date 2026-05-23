@@ -1,5 +1,7 @@
 extends ColorRect
 
+var indicator_scene = preload("res://scenes/indicator.tscn")
+
 var _selected_cards = []
 var _card_positions = {}
 var _remaining_sets = []
@@ -15,14 +17,21 @@ var _score = 0
 @onready var discard_pile = $Decks/Discard
 @onready var selected_card_positions = $CardArea/SelectedCardPositions
 
-@onready var set_count_label = $HUD/SetCountValue
+@onready var indicators = $HUD/Indicators
 @onready var score_value_label = $HUD/ScoreValue
 
 @onready var hint_timer = $HintTimer
 
 
 func _ready() -> void:
+  _init_indicators()
   _deal_new_cards()
+
+
+func _init_indicators() -> void:
+  for i in range(27):
+    var indicator = indicator_scene.instantiate()
+    indicators.add_child(indicator)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -46,8 +55,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func _refresh_hud() -> void:
-  set_count_label.text = str(_sets_found)
   score_value_label.text = str(_score)
+  for i in range(_sets_found):
+    indicators.get_child(i).on = true
 
 
 func _replace_set() -> void:

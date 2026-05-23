@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://bsaimi44psegn"]
+
+[ext_resource type="Script" uid="uid://8k1y4ry5uvre" path="res://scripts/indicator.gd" id="1_y2dtm"]
+
+[sub_resource type="Gradient" id="Gradient_g6pa8"]
+offsets = PackedFloat32Array(0.86015326, 0.9559387, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_y2dtm"]
+gradient = SubResource("Gradient_g6pa8")
+width = 16
+height = 16
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Indicator" type="AspectRatioContainer" unique_id=283981001]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -8.0
+offset_right = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 1
+script = ExtResource("1_y2dtm")
+on = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1265842107]
+self_modulate = Color(0.11764706, 0.5647059, 1, 1)
+layout_mode = 2
+texture = SubResource("GradientTexture2D_y2dtm")
+stretch_mode = 5
