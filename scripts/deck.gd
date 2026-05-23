@@ -13,6 +13,11 @@ var deck = []
 
 
 func _ready() -> void:
+  reset()
+
+
+func reset() -> void:
+  deck.clear()
   for i in range(CARD_COUNT):
     deck.push_back(i)
   shuffle()

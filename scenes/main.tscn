@@ -146,4 +146,18 @@ vertical_alignment = 1
 wait_time = 60.0
 autostart = true
 
+[node name="GameOverLabel" type="Label" parent="." unique_id=1503213833]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
+text = "No More Sets!
+Press 'N' to Start Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="timeout" from="HintTimer" to="." method="_on_hint_timer_timeout"]

@@ -21,6 +21,7 @@ var _score = 0
 @onready var score_value_label = $HUD/ScoreValue
 
 @onready var hint_timer = $HintTimer
+@onready var game_over_label = $GameOverLabel
 
 
 func _ready() -> void:
@@ -32,6 +33,11 @@ func _init_indicators() -> void:
   for i in range(27):
     var indicator = indicator_scene.instantiate()
     indicators.add_child(indicator)
+
+
+func _clear_indicators() -> void:
+  for i in indicators.get_children():
+    i.on = false
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -53,11 +59,38 @@ func _unhandled_key_input(event: InputEvent) -> void:
   if event.is_action_released("set_give_hint"):
     _give_hint()
 
+  if event.is_action_pressed("set_new_game"):
+    _reset_game()
+
 
 func _refresh_hud() -> void:
   score_value_label.text = str(_score)
   for i in range(_sets_found):
     indicators.get_child(i).on = true
+
+
+func _game_over() -> void:
+  game_over_label.visible = true
+
+
+func _reset_game() -> void:
+  var tween = null
+  var delay = 0.0
+  for c in cards.get_children():
+    tween = _animate_discard(c, discard_pile.position, delay)
+    delay += 0.05
+
+  await tween.finished
+  await get_tree().process_frame
+
+  _clear_indicators()
+  game_over_label.visible = false
+  _sets_found = 0
+  _score = 0
+  _refresh_hud()
+
+  Deck.reset()
+  _deal_new_cards()
 
 
 func _replace_set() -> void:
@@ -146,6 +179,9 @@ func _deselect_card(card: Card) -> void:
 
 
 func _give_hint() -> void:
+  if _remaining_sets.is_empty():
+    return
+
   # Pick a random card from one of the visible sets, and wiggle it
   var selected_set = _remaining_sets[randi_range(0, _remaining_sets.size() - 1)]
   var selected_card = selected_set[randi_range(0, 2)]
@@ -192,8 +228,11 @@ func _collect_visible_sets() -> int:
 func _update_remaining_sets() -> void:
   var set_count = _collect_visible_sets()
   print("Remaining Sets: " + str(set_count))
-  if set_count == 0 and not Deck.is_empty():
-    _deal_new_cards()
+  if set_count == 0:
+    if Deck.is_empty():
+      _game_over()
+    else:
+      _deal_new_cards()
 
 
 func _deal_new_cards() -> void:
