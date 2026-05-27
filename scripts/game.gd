@@ -6,6 +6,11 @@ var _selected_cards = []
 var _card_positions = {}
 var _remaining_sets = []
 
+var _visible_set_count: int = 0:
+  set(_new_visible_set_count):
+    _visible_set_count = _new_visible_set_count
+    _refresh_hud()
+
 var _sets_found = 0
 var _score = 0
 
@@ -19,6 +24,7 @@ var _score = 0
 
 @onready var indicators = $HUD/Indicators
 @onready var score_value_label = $HUD/ScoreValue
+@onready var visible_sets_value_label = $HUD/VisibleSets
 
 @onready var hint_timer = $HintTimer
 @onready var game_over_label = $GameOverLabel
@@ -64,7 +70,16 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 
 func _refresh_hud() -> void:
-  score_value_label.text = str(_score)
+  # Update visible set count with tween
+  var current_set_count = int(visible_sets_value_label.text)
+  var set_count_tween = create_tween()
+  set_count_tween.tween_method(func(new_count): visible_sets_value_label.text = str(new_count), current_set_count, _visible_set_count, 0.3)
+
+  var current_score = int(score_value_label.text)
+  var score_tween = create_tween()
+  score_tween.tween_method(func(new_score): score_value_label.text = str(new_score), current_score, _score, 0.3)
+
+
   for i in range(_sets_found):
     indicators.get_child(i).on = true
 
@@ -226,9 +241,9 @@ func _collect_visible_sets() -> int:
 
 
 func _update_remaining_sets() -> void:
-  var set_count = _collect_visible_sets()
-  print("Remaining Sets: " + str(set_count))
-  if set_count == 0:
+  _visible_set_count = _collect_visible_sets()
+  print("Remaining Sets: " + str(_visible_set_count))
+  if _visible_set_count == 0:
     if Deck.is_empty():
       _game_over()
     else:
